@@ -1,0 +1,32 @@
+<form method="post" action="/">
+  <div class="row g-3">
+    <div class="col">
+      <label for="schema" class="form-label">OpenAPI Schema</label>
+      <textarea name="schema" id="schema" type="text" class="form-control" placeholder="" aria-label="First name" rows=20><%= JSON.pretty_generate(@schema) %></textarea>
+    </div>
+    <div class="col">
+      <label for="json" class="form-label">JSON</label>
+      <textarea name="json" id="json" type="text" class="form-control" placeholder="" aria-label="Last name" rows=20><%= JSON.pretty_generate(@json_data) %></textarea>
+    </div>
+
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary">Validate</button>
+    </div>
+
+  </div>
+</form>
+
+<% if @ran_validation %>
+  <h2 class="mt-4">Output</h2>
+
+  <% if @errors.empty? %>
+    No errors
+  <% else %>
+    <ul>
+      <% @errors.each do |err| %>
+        <li><%= err["error"] %> (<code><%= "#{err["data_pointer"]} => #{err["data"]}" %></code>)</li>
+      <% end %>
+    </ul>
+  <% end %>
+
+<% end %>
