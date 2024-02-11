@@ -2,11 +2,13 @@
   <div class="row g-3">
     <div class="col">
       <label for="schema" class="form-label">OpenAPI Schema</label>
-      <textarea name="schema" id="schema" type="text" class="form-control" placeholder="" aria-label="First name" rows=20><%= JSON.pretty_generate(@schema) %></textarea>
+      <input id="target1" type="hidden" name="schema">
+      <div id="schema" style="width: 100%; height: 400px;"></div>
     </div>
     <div class="col">
       <label for="json" class="form-label">JSON</label>
-      <textarea name="json" id="json" type="text" class="form-control" placeholder="" aria-label="Last name" rows=20><%= JSON.pretty_generate(@json_data) %></textarea>
+      <input id="target2" type="hidden" name="json">
+      <div id="json" style="width: 100%; height: 400px;"></div>
     </div>
 
     <div class="col-12">
@@ -30,3 +32,31 @@
   <% end %>
 
 <% end %>
+
+<script>
+    // create the editor
+    const container = document.getElementById("schema")
+    const container2 = document.getElementById("json")
+    const target = document.getElementById("target1")
+    const target2 = document.getElementById("target2")
+
+    function options(target) {
+      return {
+        "mode": "code",
+        "indentation": 2,
+        onChangeText: (jsonString) => {
+          target.value = jsonString
+        }
+      }
+    }
+    const editor = new JSONEditor(container, options(target))
+    const editor2 = new JSONEditor(container2, options(target2))
+
+    editor.set(<%= @schema&.to_json %>)
+    target.value = <%= @schema&.to_json %>;
+    editor2.set(<%= @json_data&.to_json %>)
+    target2.value = <%= JSON.generate(@json_data || {}) %>;
+
+    // get json
+    // const updatedJson = editor.get()
+</script>
