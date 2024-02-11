@@ -18,7 +18,7 @@
   </div>
 </form>
 
-<% if @ran_validation %>
+<% if @posted %>
   <h2 class="mt-4">Output</h2>
 
   <% if @errors.empty? %>
@@ -52,11 +52,8 @@
     const editor = new JSONEditor(container, options(target))
     const editor2 = new JSONEditor(container2, options(target2))
 
-    editor.set(<%= @schema&.to_json %>)
-    target.value = <%= @schema&.to_json %>;
-    editor2.set(<%= @json_data&.to_json %>)
-    target2.value = <%= JSON.generate(@json_data || {}) %>;
-
-    // get json
-    // const updatedJson = editor.get()
+    editor.set(<%= @schema.to_json || "\"{}\"" %>)
+    target.value = '<%= @schema.to_json %>'
+    editor2.set(<%= @json_data.to_json || "\"{}\"" %>)
+    target2.value = '<%= @json_data.to_json %>'
 </script>

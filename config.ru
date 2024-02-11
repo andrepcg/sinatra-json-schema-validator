@@ -1,11 +1,13 @@
+ENV["RUBY_ENV"] ||= "development"
 
 if ENV["RUBY_ENV"] == "development"
   require 'rack/unreloader'
-  Unreloader = Rack::Unreloader.new{Sinatra::Application}
+  require 'sinatra'
+  Unreloader = Rack::Unreloader.new{Application}
   Unreloader.require './app.rb'
 
   run Unreloader
 else
   require './app'
-  run Sinatra::Application
+  run Application
 end

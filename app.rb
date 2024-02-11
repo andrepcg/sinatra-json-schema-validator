@@ -60,20 +60,25 @@ EXAMPLE_JSON = {
   "trigger_type" => "manual"
 }
 
-get '/' do
-  @schema = EXAMPLE_SCHEMA
-  @json_data = EXAMPLE_JSON
-  erb :index
-end
+class Application < Sinatra::Base
+  include ERB::Util
 
-post '/' do
-  @schema = JSON.parse(params["schema"])
-  @json_data = JSON.parse(params["json"])
+  get '/' do
+    @schema = EXAMPLE_SCHEMA
+    @json_data = EXAMPLE_JSON
+    @posted = false
+    erb :index
+  end
 
-  return redirect '/' if @schema.empty? || @json_data.empty?
+  post '/' do
+    return redirect '/' if params["schema"].empty? || params["json"].empty?
 
-  @ran_validation = true
-  @errors = validation_errors(@schema, @json_data).to_a
+    @schema = JSON.parse(params["schema"])
+    @json_data = JSON.parse(params["json"])
 
-  erb :index
+    @posted = true
+    @errors = validation_errors(@schema, @json_data).to_a
+
+    erb :index
+  end
 end
